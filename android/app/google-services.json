@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "678672499778",
+    "project_id": "skill-todo-fb",
+    "storage_bucket": "skill-todo-fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678672499778:android:e539236be8709fd88859db",
+        "android_client_info": {
+          "package_name": "com.example.todo_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678672499778-vs4t0oacmi3ce1vvarad0tkj5i4u133o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF-rpcZe_fTJUl1j28UAHiaRPjQ-ZYUPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678672499778-vs4t0oacmi3ce1vvarad0tkj5i4u133o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "678672499778-65ldv7hn1ft6uiqfs3cknd0fn7m9n4nb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.todoFirebase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
