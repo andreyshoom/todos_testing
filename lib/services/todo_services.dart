@@ -9,21 +9,21 @@ import '../models/todo.dart';
 class TodoServices with ChangeNotifier {
   List<Todo> todos = [];
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  // late StreamSubscription streamSubscriptionFirebase;
+  late StreamSubscription streamSubscriptionFirebase;
 
-  // TodoServices() {
-  //   streamSubscriptionFirebase = firestore
-  //       .collection('todos')
-  //       .snapshots()
-  //       .listen(onError: (error) => print("Listen failed: $error"), (event) {
-  //     event.docs.map(
-  //       (e) => Todo.fromJson(
-  //         e.data(),
-  //       ),
-  //     );
-  //     notifyListeners();
-  //   });
-  // }
+  TodoServices() {
+    streamSubscriptionFirebase = firestore
+        .collection('todos')
+        .snapshots()
+        .listen(onError: (error) => print("Listen failed: $error"), (event) {
+      event.docs.map(
+        (e) => Todo.fromJson(
+          e.data(),
+        ),
+      );
+      notifyListeners();
+    });
+  }
 
   // @override
   // void dispose() {
