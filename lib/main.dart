@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -11,16 +13,23 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
+  late StreamSubscription _sub;
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TodoServices>(
-      create: (context) => TodoServices(),
+      create: (context) {
+        final service = TodoServices();
+        _sub = service.todoFromFirebase2;
+        // context.read<TodoServices>();
+        // Provider.of<TodoServices>(context)._sub;
+        return service;
+      },
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
