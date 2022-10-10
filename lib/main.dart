@@ -25,9 +25,8 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<TodoServices>(
       create: (context) {
         final service = TodoServices();
-        _sub = service.todoFromFirebase2;
-        // context.read<TodoServices>();
-        // Provider.of<TodoServices>(context)._sub;
+        _sub = service.todoFromFirebase;
+
         return service;
       },
       child: MaterialApp(

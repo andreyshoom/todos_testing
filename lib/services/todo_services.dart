@@ -9,55 +9,25 @@ import '../models/todo.dart';
 class TodoServices with ChangeNotifier {
   List<Todo> todos = [];
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  late StreamSubscription streamSubscriptionFirebase;
 
-  TodoServices() {
-    streamSubscriptionFirebase = firestore
+  StreamSubscription get todoFromFirebase {
+    return firestore
         .collection('todos')
         .snapshots()
         .listen(onError: (error) => print("Listen failed: $error"), (event) {
-      event.docs.map(
-        (e) => Todo.fromJson(
-          e.data(),
-        ),
-      );
-      notifyListeners();
-    });
-  }
+      event.docs
+          .map((DocumentSnapshot document) {
+            Map<String, dynamic> data =
+                document.data()! as Map<String, dynamic>;
 
-  // @override
-  // void dispose() {
-  //   streamSubscriptionFirebase.cancel();
-  //   super.dispose();
-  // }
-
-  // StreamSubscription get todoFromFirebase {
-  //   return firestore
-  //       .collection('todos')
-  //       .snapshots()
-  //       .listen(onError: (error) => print("Listen failed: $error"), (event) {
-  //     event.docs
-  //         .map(
-  //           (e) => Todo.fromJson(
-  //             e.data(),
-  //           ),
-  //         )
-  //         .toList();
-
-  //     notifyListeners();
-  //   });
-  // }
-
-  StreamSubscription get todoFromFirebase2 {
-    return firestore.collection('todos').snapshots().listen((event) {
-      event.docs.map(
-        (e) => Todo(
-          id: e.data()["id"],
-          title: e.data()["title"],
-          tog: e.data()["title"],
-        ),
-      );
-      // .toList();
+            return Todo(
+              id: data['id'].toString(),
+              title: data['title'],
+              tog: data['tog'],
+            );
+          })
+          .toList()
+          .cast();
       notifyListeners();
     });
   }
@@ -111,22 +81,3 @@ class TodoServices with ChangeNotifier {
     notifyListeners();
   }
 }
-
-
-
-  // Stream<List<Todo>> get todoFromFirebase {
-  //   return firestore.collection('todos').snapshots().map(
-  //         (event) => event.docs.map(
-  //           (DocumentSnapshot documentSnapshot) {
-  //             Map<String, dynamic> data =
-  //                 documentSnapshot.data()! as Map<String, dynamic>;
-  //             notifyListeners(); //??????
-  //             return Todo(
-  //               id: data["id"],
-  //               title: data["title"],
-  //               tog: data["tog"],
-  //             );
-  //           },
-  //         ).toList(),
-  //       );
-  // }

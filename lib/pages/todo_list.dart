@@ -12,17 +12,17 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  late CollectionReference<TodoServices> _todos;
+  late CollectionReference<Todo> _todos;
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   _todos = FirebaseFirestore: (snapshot, options) => Todo.fromJson(snapshot.data()!),
-  //         Firestore.instance.collection('todos').withConverter(
-  //       toFirestore: (todo, _) => todo.toJson());
-
-  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _todos = FirebaseFirestore.instance.collection('todos').withConverter(
+          fromFirestore: (snapshot, _) => Todo.fromJson(snapshot.data()!),
+          toFirestore: (todo, _) => todo.toJson(),
+        );
+  }
 
   // void toggle() {
   //   setState(() {});
