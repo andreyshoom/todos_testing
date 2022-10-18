@@ -1,9 +1,6 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import '../models/todo.dart';
 
 class TodoServices with ChangeNotifier {
@@ -15,19 +12,22 @@ class TodoServices with ChangeNotifier {
         .collection('todos')
         .snapshots()
         .listen(onError: (error) => print("Listen failed: $error"), (event) {
-      event.docs
+      todos = event.docs
           .map((DocumentSnapshot document) {
+            final index = firestore.collection('todos').doc().id;
+            print(index);
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
-
+            print(data[index].toString());
             return Todo(
-              id: data['id'].toString(),
+              id: index,
               title: data['title'],
               tog: data['tog'],
             );
           })
           .toList()
           .cast();
+
       notifyListeners();
     });
   }

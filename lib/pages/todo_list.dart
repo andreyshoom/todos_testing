@@ -52,6 +52,8 @@ class _TodoListState extends State<TodoList> {
                           title: value.todos[index].title);
                       tempTodo.tog = value.todos[index].tog;
                       context.read<TodoServices>().toggleTodo(tempTodo);
+                      // Provider.of<TodoServices>(context, listen: false)
+                      //     .toggleTodo(tempTodo);
 
                       /// ------- для StreamBuilder
                       // var tempTodo = Todo(
@@ -120,7 +122,7 @@ class _TodoListState extends State<TodoList> {
                       ),
                     );
                   },
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                 ),
                 IconButton(
                   onPressed: () {
@@ -128,7 +130,7 @@ class _TodoListState extends State<TodoList> {
                         .read<TodoServices>()
                         .removeToDo(value.todos[index].id);
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.delete_rounded,
                     color: Colors.red,
                   ),
