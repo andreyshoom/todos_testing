@@ -3,7 +3,7 @@ class Todo {
   String title;
   bool tog;
 
-  Todo({required this.id, required this.title, this.tog = false});
+  Todo({required this.id, required this.title, required this.tog});
 
   void toggleBought() {
     tog = !tog;

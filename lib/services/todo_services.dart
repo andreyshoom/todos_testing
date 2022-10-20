@@ -6,36 +6,62 @@ import '../models/todo.dart';
 class TodoServices with ChangeNotifier {
   List<Todo> todos = [];
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  bool toggle = false;
 
   StreamSubscription get todoFromFirebase {
-    return firestore
-        .collection('todos')
-        .snapshots()
-        .listen(onError: (error) => print("Listen failed: $error"), (event) {
-      todos = event.docs
-          .map((DocumentSnapshot document) {
-            final index = firestore.collection('todos').doc().id;
-            print(index);
-            Map<String, dynamic> data =
-                document.data()! as Map<String, dynamic>;
-            print(data[index].toString());
-            return Todo(
-              id: index,
-              title: data['title'],
-              tog: data['tog'],
-            );
-          })
-          .toList()
-          .cast();
+    return firestore.collection('todos').snapshots().listen((event) {
+      for (var change in event.docChanges) {
+        switch (change.type) {
+          case DocumentChangeType.added:
+            todos = event.docs
+                .map(
+                  (DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                        document.data()! as Map<String, dynamic>;
 
-      notifyListeners();
+                    return Todo(
+                      id: document.id,
+                      title: data['title'],
+                      tog: data['tog'] ?? false,
+                    );
+                  },
+                )
+                .toList()
+                .cast();
+
+            notifyListeners();
+            break;
+          case DocumentChangeType.modified:
+            print("Modified: ${change.doc.data()}");
+            break;
+          case DocumentChangeType.removed:
+            print("Removed: ${change.doc.data()}");
+            break;
+        }
+      }
     });
+  }
+
+  Future<void> toggleTodo(Todo todo) async {
+    var index = todos.indexWhere(
+      (element) => element.id == todo.id,
+    );
+
+    if (index != -1) {
+      // print(todo.id);
+      await firestore.collection('todos').doc(todo.id).update({
+        'tog': todo.tog = !todo.tog,
+      });
+
+      todos[index].toggleBought();
+    }
+    notifyListeners();
   }
 
   Future<void> addTodo(Todo todo) async {
     await firestore.collection('todos').add({
       "title": todo.title,
-      "tog": false,
+      // "tog": todo.tog,
     }).then((value) {
       todo.id = value.id;
       todos.add(todo);
@@ -60,6 +86,7 @@ class TodoServices with ChangeNotifier {
     );
     if (index != -1) {
       await firestore.collection('todos').doc(todo.id).update({
+        "tog": todo.tog,
         "title": todo.title,
       });
       todos[index] = todo;
@@ -67,17 +94,23 @@ class TodoServices with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleTodo(Todo todo) async {
-    var index = todos.indexWhere(
-      (element) => element.id == todo.id,
-    );
-    if (index != -1) {
-      await firestore.collection('todos').doc(todo.id).update({
-        "tog": todo.tog = !todo.tog,
-      });
+  // Future<List<Todo>> filtering() async {
+  //   final result = await firestore
+  //       .collection('todos')
+  //       .where('tog', isEqualTo: false)
+  //       .get();
 
-      todos[index].toggleBought();
-    }
-    notifyListeners();
-  }
+  //   return result.docs.map((DocumentSnapshot document) {
+  //     final index = firestore.collection('todos').doc().id;
+
+  //     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+
+  //     return Todo(
+  //       id: index,
+  //       title: data['title'],
+  //       tog: data['tog'],
+  //     );
+  //   }).toList();
+  //   // notifyListeners();
+  // }
 }
